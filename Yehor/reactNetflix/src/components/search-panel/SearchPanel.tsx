@@ -29,6 +29,33 @@ class SearchPanel extends React.Component<IhandleSearchChangeProps, ISearchPanel
     searchBy: SearchBy.Title,
   };
 
+  componentDidMount() {
+    const querySrch = parse(this.props.location.search) as {
+      searchBy: string;
+      search: string;
+    };
+    const { searchBy, search } = querySrch;
+    this.checkSetSearchSearchBy(searchBy, search)
+  }
+
+  componentDidUpdate(prevProps: IhandleSearchChangeProps) {
+    if (this.props.location !== prevProps.location) {
+      const querySrch = parse(this.props.location.search) as {
+        searchBy: string;
+        search: string;
+      };
+      const { searchBy, search } = querySrch;
+      this.checkSetSearchSearchBy(searchBy, search)
+    }
+  }
+
+  checkSetSearchSearchBy = (searchByValue: string, searchValue: string) => {
+    this.setState({
+      searchBy: searchByValue === SearchBy.Genre ? SearchBy.Genre: SearchBy.Title,
+      value: searchValue || ""
+    })
+  }
+
   searchByTitle = () => {
     if (this.state.searchBy === SearchBy.Genre) {
       this.setState({
@@ -57,57 +84,6 @@ class SearchPanel extends React.Component<IhandleSearchChangeProps, ISearchPanel
       searchBy: this.state.searchBy,
     });
   };
-
-  componentDidMount() {
-    const querySrch = parse(this.props.location.search) as {
-      searchBy: string;
-      search: string;
-    };
-    const { searchBy, search } = querySrch;
-    // verify searchBy
-    if (searchBy) {
-      if (searchBy === "title") {
-        this.setState({ searchBy: SearchBy.Title });
-      } else {
-        this.setState({ searchBy: SearchBy.Genre });
-      }
-    } else {
-      this.setState({ searchBy: SearchBy.Title });
-    }
-    // verify search
-    if (search) {
-      this.setState({ value: search });
-    } else {
-      this.setState({ value: "" });
-    }
-  }
-
-  componentDidUpdate(prevProps: IhandleSearchChangeProps) {
-    if (this.props.location !== prevProps.location) {
-      const querySrch = parse(this.props.location.search) as {
-        searchBy: string;
-        search: string;
-      };
-      const { searchBy, search } = querySrch;
-      // verify searchBy
-      if (searchBy) {
-        if (searchBy === "title") {
-          this.setState({ searchBy: SearchBy.Title });
-        } else {
-          this.setState({ searchBy: SearchBy.Genre });
-        }
-      } else {
-        this.setState({ searchBy: SearchBy.Title });
-      }
-      // verify search
-      if (search) {
-        this.setState({ value: search });
-      } else {
-        this.setState({ value: "" });
-      }
-    }
-  }
-  
 
   render() {
     return (

@@ -22,6 +22,23 @@ class SortPanel extends React.Component<ISortPanelProps, ISortPanelState> {
     sortBy: SortBy.Date,
   };
 
+  componentDidMount() {
+    const querySrch = parse(this.props.location.search) as { sortBy: string };
+    this.checkSetSortby(querySrch.sortBy)
+  }
+  componentDidUpdate(prevProps: ISortPanelProps) {
+    if (this.props.location !== prevProps.location) {
+      const querySrch = parse(this.props.location.search) as { sortBy: string };
+      this.checkSetSortby(querySrch.sortBy)
+      }
+    }
+
+  checkSetSortby = (sortByvalue: string) => {
+    this.setState({
+      sortBy: sortByvalue === SortBy.Rating ? SortBy.Rating: SortBy.Date
+    })
+  }
+
   sortByDate = () => {
     this.setState({
       sortBy: SortBy.Date,
@@ -34,36 +51,7 @@ class SortPanel extends React.Component<ISortPanelProps, ISortPanelState> {
     });
     this.props.handlerSortChange(SortBy.Rating);
   };
-  componentDidMount() {
-    const querySrch = parse(this.props.location.search) as { sortBy: string };
 
-    const { sortBy } = querySrch;
-    if (sortBy) {
-      if (sortBy === SortBy.Date) {
-        this.setState({ sortBy: SortBy.Date });
-      } else {
-        this.setState({ sortBy: SortBy.Rating });
-      }
-    } else {
-      this.setState({ sortBy: SortBy.Date });
-    }
-  }
-  componentDidUpdate(prevProps: ISortPanelProps) {
-    if (this.props.location !== prevProps.location) {
-      const querySrch = parse(this.props.location.search) as { sortBy: string };
-
-    const { sortBy } = querySrch;
-    if (sortBy) {
-      if (sortBy === SortBy.Date) {
-        this.setState({ sortBy: SortBy.Date });
-      } else {
-        this.setState({ sortBy: SortBy.Rating });
-      }
-    } else {
-      this.setState({ sortBy: SortBy.Date });
-    }
-      }
-    }
 
   render() {
     const { moviesLength } = this.props;

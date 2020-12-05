@@ -36,7 +36,6 @@ type DetailedPageProps = PropsFromRedux & RouteComponentProps<{ id: string }>;
 class DetailedPage extends React.Component<DetailedPageProps, {}> {
   componentDidMount() {
     const filmId = this.props.match.params.id;
-    console.log(filmId);
     this.props.currentMovieLoad("movie is loading", filmId);
     
   }
@@ -55,8 +54,6 @@ class DetailedPage extends React.Component<DetailedPageProps, {}> {
 
   render() {
     const { movie, movies } = this.props;
-    console.log(movie);
-
     return (
       <div className="allpageWrapper">
         <div className="wrapper">

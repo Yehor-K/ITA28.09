@@ -8,13 +8,10 @@ import Footer from "../../components/footer";
 import ErrorBlock from "../../components/errorBlock";
 import { RouteComponentProps } from "react-router-dom";
 import { stringify, parse } from "query-string";
-import IMovies from "../../interfaces/IMovies";
 import {
   loadData,
   dataOffsetIncrement,
   dataOffsetDecrement,
-  receivedData,
-  ILoadData,
 } from "../../redux/actions/moviesActions";
 import { connect, ConnectedProps } from "react-redux";
 import IReduxState from "../../interfaces/IReduxState"
@@ -37,26 +34,24 @@ type PropsFromRedux = ConnectedProps<typeof connector> & RouteComponentProps;
 
 class HomePage extends React.Component<PropsFromRedux, {}> {
   componentDidMount() {
+    this.parseLoadData()
+  }
+
+  componentDidUpdate = (prevProps: PropsFromRedux) => {
+    if (this.props.location !== prevProps.location  || this.props.offset !== prevProps.offset) {
+      this.parseLoadData()
+    }
+  };
+
+  parseLoadData = () => {
     const queryUrl = parse(this.props.location.search) as {
       searchBy: string;
       search: string;
       sortBy: string;
     };
-    let { sortBy, searchBy, search } = queryUrl;
+    const { sortBy, searchBy, search } = queryUrl;
     this.props.loadData("movie is loading", sortBy, searchBy, search, this.props.offset);
   }
-
-  componentDidUpdate = (prevProps: PropsFromRedux) => {
-    if (this.props.location !== prevProps.location  || this.props.offset !== prevProps.offset) {
-      const queryUrl = parse(this.props.location.search) as {
-        searchBy: string;
-        search: string;
-        sortBy: string;
-      };
-      const { sortBy, searchBy, search } = queryUrl;
-      this.props.loadData("movie is loading", sortBy, searchBy, search, this.props.offset);
-    }
-  };
 
   handleSearchChange = ({
     search,
